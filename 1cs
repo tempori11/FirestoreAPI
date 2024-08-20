@@ -2,8 +2,6 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,23 +13,31 @@ FirebaseApp.Create(new AppOptions()
 });
 
 // Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-
-
-
-
-builder.Services.AddCors(options =>
+ 
+ builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder => builder
-        .AllowAnyOrigin()
+    options.AddPolicy("AllowMobileApp",
+        builder => builder.WithOrigins("http://localhost:8100", "http://192.168.11.1:5208")
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
 
+
+
+/*
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+*/
 
 builder.Services.AddSingleton(provider =>
 {
@@ -56,7 +62,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowMobileApp");
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

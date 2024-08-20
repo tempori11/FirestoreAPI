@@ -1,11 +1,12 @@
 using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using FirestoreAPI.Models;
 
-namespace qrPaymentAPP.Controllers
+namespace FirestoreAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly FirestoreDb _firestoreDb;
@@ -29,6 +30,16 @@ namespace qrPaymentAPP.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost("user_uid")]
+        public async Task<IActionResult> AddUserUid([FromBody] UidPayload data)
+        {
+            string userUid = data.Uid;
+            // Store userUid in the temp collection
+            DocumentReference docRef = _firestoreDb.Collection("temp").Document(userUid);
+            await docRef.SetAsync(new { userUid });
+            return Ok(new { status = "User UID stored successfully" });
         }
     }
 }
