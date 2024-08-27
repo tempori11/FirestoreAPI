@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "keys/serviceAccountKey.json");
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "secret/key/comes/here");
 
 FirebaseApp.Create(new AppOptions()
 {
